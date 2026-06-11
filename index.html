@@ -178,6 +178,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            transition: top 3s cubic-bezier(0.1, 0.8, 0.1, 1);
         }
 
         .slot-icon {
@@ -188,20 +189,6 @@
             align-items: center;
             font-size: 2.2rem;
             user-select: none;
-        }
-
-        /* --- HEART EXPLOSION EFFECT --- */
-        .heart-pop {
-            position: fixed;
-            font-size: 1.5rem;
-            pointer-events: none;
-            z-index: 100;
-            animation: flyUp 2s ease-out forwards;
-            opacity: 0;
-        }
-        @keyframes flyUp {
-            0% { transform: translateY(0) scale(0.5); opacity: 1; }
-            100% { transform: translateY(-200px) translateX(var(--x-move)) scale(1.2); opacity: 0; }
         }
 
         /* --- Scratch Card styles --- */
@@ -259,7 +246,7 @@
 
     <!-- PÁGINA 2: MENSAJE INTERMEDIO -->
     <div id="screen2" class="container">
-        <h2 class="screen-title">May 14th ✨</h2>
+        <h2 class="screen-title">Mayo 14 ✨</h2>
         <div class="map-placeholder"></div>
         <p>Ese día estaba súper nervioso, pero me hiciste sentir muy afortunado de poder llamarte mi novia. Contigo siempre me la paso increíble, porque no importa lo que pase, contigo siempre es un buen momento.</p>
         <button onclick="nextScreen(3)">Continuar</button>
@@ -322,101 +309,44 @@
         }
         window.onload = typeLetter;
 
-        // --- ROMANTIC SLOT MACHINE LOGIC WITH ATTEMPTS ---
-        const pool = ['💖', '🍿', '🌹', '✨', '🎬', '🍦', '🎬', '🍿', '🌹']; 
-        const reelLength = 20; 
-        let currentAttempt = 1;
+        // --- ROMANTIC SLOT MACHINE LOGIC ---
+        const pool = ['💖', '🍿', '🥞', '🌹', '✨', '🎬', '🍦', '🥞']; 
+        const reelLength = 15; 
 
         function initSlots() {
-            resetReelsToStart();
+            buildReel('reel1');
+            buildReel('reel2');
+            buildReel('reel3');
         }
 
-        function resetReelsToStart() {
-            setupReelElements('reel1', '🍿', '💖', '🍿'); 
-            setupReelElements('reel2', '✨', '🎬', '🌹'); 
-            setupReelElements('reel3', '🎬', '🌹', '✨'); 
-        }
-
-        function setupReelElements(reelId, firstIcon, midIcon, lastIcon) {
+        function buildReel(reelId) {
             const reel = document.getElementById(reelId);
-            reel.style.transition = 'none';
-            reel.style.top = '0px';
-            
-            let html = `<div class="slot-icon">${firstIcon}</div>`;
-            for (let i = 0; i < reelLength - 2; i++) {
+            let html = '';
+            for (let i = 0; i < reelLength - 1; i++) {
                 const randomIcon = pool[Math.floor(Math.random() * pool.length)];
                 html += `<div class="slot-icon">${randomIcon}</div>`;
             }
-            html += `<div class="slot-icon">${midIcon}</div>`;
-            html += `<div class="slot-icon">${lastIcon}</div>`;
+            html += `<div class="slot-icon">🥞</div>`;
             reel.innerHTML = html;
         }
 
+        let hasPlayed = false;
         function spinSlots() {
-            const spinBtn = document.getElementById('spin-btn');
-            spinBtn.disabled = true;
+            if (hasPlayed) return;
+            hasPlayed = true;
+            document.getElementById('spin-btn').disabled = true;
 
-            // Determine final position based on attempt
-            let targetOffsetIndex = reelLength - 2; // Default to winning icon position (midIcon)
-            if (currentAttempt === 1 || currentAttempt === 2) {
-                targetOffsetIndex = reelLength - 1; // Forces a non-matching layout (lastIcon)
-            }
+            const targetTop = -((reelLength - 1) * 80);
 
-            const targetTop = -(targetOffsetIndex * 80);
+            setTimeout(() => { document.getElementById('reel1').style.top = `${targetTop}px`; }, 0);
+            setTimeout(() => { document.getElementById('reel2').style.top = `${targetTop}px`; }, 250);
+            setTimeout(() => { document.getElementById('reel3').style.top = `${targetTop}px`; }, 500);
 
-            // Trigger the spin animation
-            document.querySelectorAll('.slot-reel').forEach((reel, idx) => {
-                reel.style.transition = 'top 3s cubic-bezier(0.1, 0.8, 0.1, 1)';
-                setTimeout(() => {
-                    reel.style.top = `${targetTop}px`;
-                }, idx * 200);
-            });
-
-            // Handle spin outcomes
             setTimeout(() => {
-                if (currentAttempt === 1) {
-                    document.getElementById('game-title').innerText = "¡Casi! Intenta de nuevo 🥺";
-                    spinBtn.innerText = "Girar otra vez 🔄";
-                    spinBtn.disabled = false;
-                    currentAttempt++;
-                } else if (currentAttempt === 2) {
-                    document.getElementById('game-title').innerText = "¡Último intento, tú puedes! 🎰";
-                    spinBtn.innerText = "Girar de la suerte 🍀";
-                    spinBtn.disabled = false;
-                    currentAttempt++;
-                } else {
-                    // Winning Attempt
-                    document.getElementById('game-title').innerText = "¡CITA GANADA! 🥞🔥";
-                    document.getElementById('game-subtitle').innerText = "¡Tres panqueques seguidos!";
-                    document.getElementById('scratch-container').style.display = 'block';
-                    spinBtn.style.display = 'none';
-                    triggerHeartExplosion();
-                }
-            }, 3600);
-
-            // Reset positioning secretly behind the scenes before the final jackpot attempt
-            if (currentAttempt === 2) {
-                setTimeout(() => {
-                    setupReelElements('reel1', '🍿', '🥞', '🎬');
-                    setupReelElements('reel2', '✨', '🥞', '🌹');
-                    setupReelElements('reel3', '🎬', '🥞', '✨');
-                }, 3500);
-            }
-        }
-
-        function triggerHeartExplosion() {
-            for (let i = 0; i < 25; i++) {
-                setTimeout(() => {
-                    const heart = document.createElement('div');
-                    heart.className = 'heart-pop';
-                    heart.innerText = ['💖', '❤️', '💕', '🥰'][Math.floor(Math.random() * 4)];
-                    heart.style.left = Math.random() * 80 + 10 + '%';
-                    heart.style.top = Math.random() * 50 + 30 + '%';
-                    heart.style.setProperty('--x-move', (Math.random() * 100 - 50) + 'px');
-                    document.body.appendChild(heart);
-                    setTimeout(() => heart.remove(), 2000);
-                }, i * 80);
-            }
+                document.getElementById('game-title').innerText = "¡CITA GANADA! 🥞🔥";
+                document.getElementById('game-subtitle').innerText = "¡Tres panqueques seguidos!";
+                document.getElementById('scratch-container').style.display = 'block';
+            }, 3500);
         }
 
         // --- MOBILE-SAFE SCRATCH CARD MECHANICAL CODE ---
