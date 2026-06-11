@@ -116,9 +116,9 @@
             text-align: left;
         }
 
-        /* --- SCREEN 2: MESSAGE (AJUSTADO CON CAJA MÁS GRANDE) --- */
+        /* --- SCREEN 2: MESSAGE --- */
         #screen2 {
-            max-width: 500px; /* Caja un poco más ancha */
+            max-width: 500px;
         }
 
         .screen-title {
@@ -131,8 +131,8 @@
 
         .map-placeholder {
             width: 100%;
-            height: 320px; /* Ampliado de 200px a 320px */
-            background: url('May14.jpeg') center/contain no-repeat; /* Contain hace que se vea completa */
+            height: 320px;
+            background: url('Mayo 14.jpeg') center/contain no-repeat;
             border-radius: 15px;
             margin-bottom: 20px;
             border: 2px solid rgba(255,255,255,0.2);
@@ -226,6 +226,48 @@
             font-size: 0.85rem;
             color: #ccc;
         }
+
+        /* --- SCREEN 4: LOVE METER EXTRA --- */
+        .love-counter-box {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ff416c;
+            margin: 15px 0;
+            font-family: 'Courier New', Courier, monospace; /* Ticker look */
+            text-shadow: 0 0 15px rgba(255, 65, 108, 0.6);
+        }
+        .reason-box {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 15px;
+            min-height: 70px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.1rem;
+            font-style: italic;
+            border-left: 4px solid #ff416c;
+            width: 100%;
+        }
+        .heart-btn {
+            background: radial-gradient(circle, #ff416c, #ff4b2b);
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            font-size: 1.8rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 15px;
+            box-shadow: 0 0 15px rgba(255, 65, 108, 0.5);
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+            100% { transform: scale(1); }
+        }
     </style>
 </head>
 <body>
@@ -238,21 +280,24 @@
         <div class="star"></div>
     </div>
 
+    <!-- SCREEN 1: Text Loading -->
     <div id="screen1" class="container active">
         <div id="typing-text"></div>
         <button id="btn1" style="display: none;" onclick="nextScreen(2)">Presiona aquí</button>
     </div>
 
+    <!-- SCREEN 2: The Map Card -->
     <div id="screen2" class="container">
         <h2 class="screen-title">May 14th ✨</h2>
         <div class="map-placeholder"></div>
-        <p>Ese día estaba súper nervioso, pero me hiciste sentir muy afortunado de poder llamarte mi novia. Contigo siempre me la paso increíble, porque no importa lo que pase, contigo siempre es un buen momento.</p>
+        <p>Este día estaba súper nervioso, pero me hiciste sentir muy afortunado de poder llamarte mi novia. Contigo siempre me la paso increíble, porque no importa lo que pase, contigo siempre es un buen momento.</p>
         <button onclick="nextScreen(3)">Continuar</button>
     </div>
 
+    <!-- SCREEN 3: Slots & Scratch Off -->
     <div id="screen3" class="container">
-        <h3 id="game-title" style="margin-bottom: 5px; font-size: 1.2rem;">¡Prueba tu suerte por una cita! 🎰</h3>
-        <p id="game-subtitle" style="font-size: 0.9rem; color: #aaa;">¡Saca 3 iguales para ganar el premio!</p>
+        <h3 id="game-title" style="margin-bottom: 5px; font-size: 1.2rem;">¡Nuestra siguiente cita será..! 🎰</h3>
+        <p id="game-subtitle" style="font-size: 0.9rem; color: #aaa;">¡Saca 3 iguales para seleccionar la cita!!</p>
         
         <div class="slots-container">
             <div class="slot-window">
@@ -269,28 +314,51 @@
         <button id="spin-btn" onclick="spinSlots()">Probar Suerte ✨</button>
 
         <div id="scratch-container">
-            <h4 style="margin-bottom: 5px; color: #ff9068; font-size: 1.05rem;">🎉 ¡JACKPOT! ¡Ganaste la cita ideal! y tienes un premio extra... ¡Raspa abajo!</h4>
+            <h4 style="margin-bottom: 5px; color: #ff9068; font-size: 1.05rem;">🎉 ¡JACKPOT! ¡Ganaste la cita ideal! Raspa abajo para ver más detalles!</h4>
             <div class="scratch-card">
                 Desayuno en Jalpa + ¡Cupón para quererte siempre! 💖
                 <canvas id="scratch-canvas" width="260" height="90"></canvas>
             </div>
-            <p id="scratch-instruction">Usa tu dedo para raspar la tarjeta ✨</p>
+            <p id="scratch-instruction">Usa tu dedo para raspar la tarjeta</p>
+            
+            <!-- NEW NEXT STEP BUTTON -->
+            <button id="love-btn" style="width: 90%; max-width: 280px;" onclick="nextScreen(4)">¿Quieres saber cuánto te quiero? 🤔❤️</button>
         </div>
+    </div>
+
+    <!-- SCREEN 4: The Love Meter Extra Screen -->
+    <div id="screen4" class="container">
+        <h2 class="screen-title">Mi amor por ti...</h2>
+        <p style="font-size: 0.95rem; color: #ccc;">No se puede medir, ¡pero crece cada milisegundo!</p>
+        
+        <!-- Live Counting Tracker -->
+        <div id="love-counter" class="love-counter-box">999,999</div>
+        
+        <p style="font-size: 1rem; font-weight: bold; margin-top: 10px;">Presiona el corazón para ver una razón:</p>
+        <button class="heart-btn" onclick="generateReason()">❤️</button>
+        
+        <div id="reason-display" class="reason-box">Presiona el corazón para descubrirlo... ✨</div>
     </div>
 
     <script>
         // --- ROUTING ---
+        let counterInterval; // Store counter loop reference
+        
         function nextScreen(screenNum) {
             document.querySelectorAll('.container').forEach(el => el.classList.remove('active'));
             document.getElementById(`screen${screenNum}`).classList.add('active');
+            
             if (screenNum === 3) {
                 initSlots();
                 initScratchCard();
             }
+            if (screenNum === 4) {
+                startLoveCounter();
+            }
         }
 
         // --- TYPING EFFECT ---
-        const message = "¡Feliz primer mes, Natalia, mi amor! Dcosasona ideal; te prometo que siempre estaré ahí para ti, ayudándote a salir adelante en lo que sea.";
+        const message = "Feliz primer mes, mi niña hermosa! No me creo que ya haya pasado un mes entero desde que empezamos. Contigo todo se siente sano, libre y muy bonito. Me encanta tu risa y el montón de paz que me da tenerte en mi vida. Gracias por este primer mes de muchos que nos esperan.";
         let index = 0;
         const speed = 40; 
 
@@ -385,6 +453,34 @@
             canvas.addEventListener('touchmove', (e) => {
                 scratch(e);
             });
+        }
+
+        // --- SCREEN 4 ENGINE: INFINITE TICKER & REASONS ---
+        let loveScore = 1423984; // Fun starting seed number
+        
+        function startLoveCounter() {
+            const counterElement = document.getElementById('love-counter');
+            counterInterval = setInterval(() => {
+                loveScore += Math.floor(Math.random() * 7) + 3; // Ticks upward rapidly
+                counterElement.innerText = loveScore.toLocaleString();
+            }, 50);
+        }
+
+        const reasons = [
+            "Por tu risa hermosa que me alegra cualquier día. ",
+            "Por la paz y tranquilidad que me das. ",
+            "Por cómo me haces sentir el novio más afortunado del mundo. ",
+            "Porque contigo todo se siente sano, libre y muy bonito. ",
+            "Por tus abrazos fuertes que me hacen sentir seguro. ",
+            "Por la manera tan linda en la que me miras. ",
+            "Porque no importa lo que pase, contigo siempre es un buen momento. ",
+            "Simplemente por ser tú: mi persona ideal y mi niña hermosa. 👑"
+        ];
+
+        function generateReason() {
+            const display = document.getElementById('reason-display');
+            const randomReason = reasons[Math.floor(Math.random() * reasons.length)];
+            display.innerText = randomReason;
         }
     </script>
 </body>
