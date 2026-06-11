@@ -23,10 +23,11 @@
             text-align: center;
             overflow-x: hidden;
             padding: 15px;
+            position: relative;
         }
 
-        /* --- SHOOTING STARS BACKGROUND --- */
-        .stars {
+        /* --- SHOOTING STARS & HEARTS BACKGROUND --- */
+        .sky-container {
             position: fixed;
             top: 0;
             left: 0;
@@ -35,6 +36,8 @@
             z-index: 0;
             pointer-events: none;
         }
+        
+        /* Shooting Stars */
         .star {
             position: absolute;
             left: 50%;
@@ -55,6 +58,26 @@
         .star:nth-child(3) { top: 45%; left: 5%; animation-delay: 0.8s; animation-duration: 4.5s; }
         .star:nth-child(4) { top: 15%; left: 80%; animation-delay: 2.3s; animation-duration: 3.8s; }
         .star:nth-child(5) { top: 70%; left: 40%; animation-delay: 1.1s; animation-duration: 5s; }
+
+        /* Floating Background Hearts */
+        .bg-heart {
+            position: absolute;
+            color: rgba(255, 65, 108, 0.3);
+            font-size: 1.5rem;
+            animation: floatUp 6s linear infinite;
+            bottom: -50px;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-105vh) rotate(360deg); opacity: 0; }
+        }
+        .h1 { left: 10%; animation-delay: 0s; animation-duration: 7s; font-size: 1.2rem; }
+        .h2 { left: 30%; animation-delay: 2s; animation-duration: 9s; font-size: 1.8rem; }
+        .h3 { left: 55%; animation-delay: 1s; animation-duration: 6s; font-size: 1rem; }
+        .h4 { left: 75%; animation-delay: 4s; animation-duration: 8s; font-size: 2rem; }
+        .h5 { left: 90%; animation-delay: 3s; animation-duration: 7s; font-size: 1.4rem; }
 
         /* --- RESPONSIVE CARD CONTAINER --- */
         .container {
@@ -116,7 +139,7 @@
             text-align: left;
         }
 
-        /* --- SCREEN 2: MESSAGE --- */
+        /* --- SCREEN 2: MESSAGE (FIXED TITLE & IMAGE URL) --- */
         #screen2 {
             max-width: 500px;
         }
@@ -132,7 +155,8 @@
         .map-placeholder {
             width: 100%;
             height: 320px;
-            background: url('Mayo 14.jpeg') center/contain no-repeat;
+            /* Using URL encoding (%20) handles the blank space in the filename safely */
+            background: url('Mayo%2014.jpeg') center/contain no-repeat;
             border-radius: 15px;
             margin-bottom: 20px;
             border: 2px solid rgba(255,255,255,0.2);
@@ -233,7 +257,7 @@
             font-weight: bold;
             color: #ff416c;
             margin: 15px 0;
-            font-family: 'Courier New', Courier, monospace; /* Ticker look */
+            font-family: 'Courier New', Courier, monospace;
             text-shadow: 0 0 15px rgba(255, 65, 108, 0.6);
         }
         .reason-box {
@@ -272,29 +296,32 @@
 </head>
 <body>
 
-    <div class="stars">
+    <div class="sky-container">
         <div class="star"></div>
         <div class="star"></div>
         <div class="star"></div>
         <div class="star"></div>
         <div class="star"></div>
+        
+        <div class="bg-heart h1">❤️</div>
+        <div class="bg-heart h2">💖</div>
+        <div class="bg-heart h3">❤️</div>
+        <div class="bg-heart h4">💕</div>
+        <div class="bg-heart h5">❤️</div>
     </div>
 
-    <!-- SCREEN 1: Text Loading -->
     <div id="screen1" class="container active">
         <div id="typing-text"></div>
         <button id="btn1" style="display: none;" onclick="nextScreen(2)">Presiona aquí</button>
     </div>
 
-    <!-- SCREEN 2: The Map Card -->
     <div id="screen2" class="container">
-        <h2 class="screen-title">May 14th ✨</h2>
+        <h2 class="screen-title">Mayo 14 ✨</h2>
         <div class="map-placeholder"></div>
         <p>Este día estaba súper nervioso, pero me hiciste sentir muy afortunado de poder llamarte mi novia. Contigo siempre me la paso increíble, porque no importa lo que pase, contigo siempre es un buen momento.</p>
         <button onclick="nextScreen(3)">Continuar</button>
     </div>
 
-    <!-- SCREEN 3: Slots & Scratch Off -->
     <div id="screen3" class="container">
         <h3 id="game-title" style="margin-bottom: 5px; font-size: 1.2rem;">¡Nuestra siguiente cita será..! 🎰</h3>
         <p id="game-subtitle" style="font-size: 0.9rem; color: #aaa;">¡Saca 3 iguales para seleccionar la cita!!</p>
@@ -321,17 +348,14 @@
             </div>
             <p id="scratch-instruction">Usa tu dedo para raspar la tarjeta</p>
             
-            <!-- NEW NEXT STEP BUTTON -->
             <button id="love-btn" style="width: 90%; max-width: 280px;" onclick="nextScreen(4)">¿Quieres saber cuánto te quiero? 🤔❤️</button>
         </div>
     </div>
 
-    <!-- SCREEN 4: The Love Meter Extra Screen -->
     <div id="screen4" class="container">
         <h2 class="screen-title">Mi amor por ti...</h2>
         <p style="font-size: 0.95rem; color: #ccc;">No se puede medir, ¡pero crece cada milisegundo!</p>
         
-        <!-- Live Counting Tracker -->
         <div id="love-counter" class="love-counter-box">999,999</div>
         
         <p style="font-size: 1rem; font-weight: bold; margin-top: 10px;">Presiona el corazón para ver una razón:</p>
@@ -342,7 +366,7 @@
 
     <script>
         // --- ROUTING ---
-        let counterInterval; // Store counter loop reference
+        let counterInterval; 
         
         function nextScreen(screenNum) {
             document.querySelectorAll('.container').forEach(el => el.classList.remove('active'));
@@ -456,24 +480,24 @@
         }
 
         // --- SCREEN 4 ENGINE: INFINITE TICKER & REASONS ---
-        let loveScore = 1423984; // Fun starting seed number
+        let loveScore = 1423984; 
         
         function startLoveCounter() {
             const counterElement = document.getElementById('love-counter');
             counterInterval = setInterval(() => {
-                loveScore += Math.floor(Math.random() * 7) + 3; // Ticks upward rapidly
+                loveScore += Math.floor(Math.random() * 7) + 3; 
                 counterElement.innerText = loveScore.toLocaleString();
             }, 50);
         }
 
         const reasons = [
-            "Por tu risa hermosa que me alegra cualquier día. ",
-            "Por la paz y tranquilidad que me das. ",
-            "Por cómo me haces sentir el novio más afortunado del mundo. ",
-            "Porque contigo todo se siente sano, libre y muy bonito. ",
-            "Por tus abrazos fuertes que me hacen sentir seguro. ",
-            "Por la manera tan linda en la que me miras. ",
-            "Porque no importa lo que pase, contigo siempre es un buen momento. ",
+            "Por tu risa hermosa que me alegra cualquier día.",
+            "Por la paz y tranquilidad que me das. 🕊️",
+            "Por cómo me haces sentir el novio más afortunado del mundo. 🍀",
+            "Porque contigo todo se siente sano, libre y muy bonito.",
+            "Por tus abrazos fuertes que me hacen sentir seguro. 🤗",
+            "Por la manera tan linda en la que me miras.",
+            "Porque no importa lo que pase, contigo siempre es un buen momento. ⏳",
             "Simplemente por ser tú: mi persona ideal y mi niña hermosa. 👑"
         ];
 
