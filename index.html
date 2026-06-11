@@ -23,11 +23,10 @@
             text-align: center;
             overflow-x: hidden;
             padding: 15px;
-            position: relative;
         }
 
-        /* --- SHOOTING STARS & HEARTS BACKGROUND --- */
-        .sky-container {
+        /* --- SHOOTING STARS BACKGROUND --- */
+        .stars {
             position: fixed;
             top: 0;
             left: 0;
@@ -36,8 +35,6 @@
             z-index: 0;
             pointer-events: none;
         }
-        
-        /* Shooting Stars */
         .star {
             position: absolute;
             left: 50%;
@@ -58,26 +55,6 @@
         .star:nth-child(3) { top: 45%; left: 5%; animation-delay: 0.8s; animation-duration: 4.5s; }
         .star:nth-child(4) { top: 15%; left: 80%; animation-delay: 2.3s; animation-duration: 3.8s; }
         .star:nth-child(5) { top: 70%; left: 40%; animation-delay: 1.1s; animation-duration: 5s; }
-
-        /* Floating Background Hearts */
-        .bg-heart {
-            position: absolute;
-            color: rgba(255, 65, 108, 0.3);
-            font-size: 1.5rem;
-            animation: floatUp 6s linear infinite;
-            bottom: -50px;
-        }
-        @keyframes floatUp {
-            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-105vh) rotate(360deg); opacity: 0; }
-        }
-        .h1 { left: 10%; animation-delay: 0s; animation-duration: 7s; font-size: 1.2rem; }
-        .h2 { left: 30%; animation-delay: 2s; animation-duration: 9s; font-size: 1.8rem; }
-        .h3 { left: 55%; animation-delay: 1s; animation-duration: 6s; font-size: 1rem; }
-        .h4 { left: 75%; animation-delay: 4s; animation-duration: 8s; font-size: 2rem; }
-        .h5 { left: 90%; animation-delay: 3s; animation-duration: 7s; font-size: 1.4rem; }
 
         /* --- RESPONSIVE CARD CONTAINER --- */
         .container {
@@ -139,7 +116,7 @@
             text-align: left;
         }
 
-        /* --- SCREEN 2: MESSAGE (FIXED TITLE & IMAGE URL) --- */
+        /* --- SCREEN 2: MESSAGE --- */
         #screen2 {
             max-width: 500px;
         }
@@ -155,8 +132,7 @@
         .map-placeholder {
             width: 100%;
             height: 320px;
-            /* Using URL encoding (%20) handles the blank space in the filename safely */
-            background: url('Mayo%2014.jpeg') center/contain no-repeat;
+            background: url('May14.jpeg') center/contain no-repeat;
             border-radius: 15px;
             margin-bottom: 20px;
             border: 2px solid rgba(255,255,255,0.2);
@@ -202,7 +178,6 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            transition: top 3s cubic-bezier(0.1, 0.8, 0.1, 1);
         }
 
         .slot-icon {
@@ -213,6 +188,20 @@
             align-items: center;
             font-size: 2.2rem;
             user-select: none;
+        }
+
+        /* --- HEART EXPLOSION EFFECT --- */
+        .heart-pop {
+            position: fixed;
+            font-size: 1.5rem;
+            pointer-events: none;
+            z-index: 100;
+            animation: flyUp 2s ease-out forwards;
+            opacity: 0;
+        }
+        @keyframes flyUp {
+            0% { transform: translateY(0) scale(0.5); opacity: 1; }
+            100% { transform: translateY(-200px) translateX(var(--x-move)) scale(1.2); opacity: 0; }
         }
 
         /* --- Scratch Card styles --- */
@@ -250,81 +239,36 @@
             font-size: 0.85rem;
             color: #ccc;
         }
-
-        /* --- SCREEN 4: LOVE METER EXTRA --- */
-        .love-counter-box {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #ff416c;
-            margin: 15px 0;
-            font-family: 'Courier New', Courier, monospace;
-            text-shadow: 0 0 15px rgba(255, 65, 108, 0.6);
-        }
-        .reason-box {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 15px;
-            margin-top: 15px;
-            min-height: 70px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.1rem;
-            font-style: italic;
-            border-left: 4px solid #ff416c;
-            width: 100%;
-        }
-        .heart-btn {
-            background: radial-gradient(circle, #ff416c, #ff4b2b);
-            width: 65px;
-            height: 65px;
-            border-radius: 50%;
-            font-size: 1.8rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 15px;
-            box-shadow: 0 0 15px rgba(255, 65, 108, 0.5);
-            animation: pulse 1.5s infinite;
-        }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.08); }
-            100% { transform: scale(1); }
-        }
     </style>
 </head>
 <body>
 
-    <div class="sky-container">
+    <div class="stars">
         <div class="star"></div>
         <div class="star"></div>
         <div class="star"></div>
         <div class="star"></div>
         <div class="star"></div>
-        
-        <div class="bg-heart h1">❤️</div>
-        <div class="bg-heart h2">💖</div>
-        <div class="bg-heart h3">❤️</div>
-        <div class="bg-heart h4">💕</div>
-        <div class="bg-heart h5">❤️</div>
     </div>
 
+    <!-- PÁGINA 1: EFECTO DE ESCRITURA -->
     <div id="screen1" class="container active">
         <div id="typing-text"></div>
         <button id="btn1" style="display: none;" onclick="nextScreen(2)">Presiona aquí</button>
     </div>
 
+    <!-- PÁGINA 2: MENSAJE INTERMEDIO -->
     <div id="screen2" class="container">
-        <h2 class="screen-title">Mayo 14 ✨</h2>
+        <h2 class="screen-title">May 14th ✨</h2>
         <div class="map-placeholder"></div>
-        <p>Este día estaba súper nervioso, pero me hiciste sentir muy afortunado de poder llamarte mi novia. Contigo siempre me la paso increíble, porque no importa lo que pase, contigo siempre es un buen momento.</p>
+        <p>Ese día estaba súper nervioso, pero me hiciste sentir muy afortunado de poder llamarte mi novia. Contigo siempre me la paso increíble, porque no importa lo que pase, contigo siempre es un buen momento.</p>
         <button onclick="nextScreen(3)">Continuar</button>
     </div>
 
+    <!-- PÁGINA 3: MÁQUINA TRAGAMONEDAS -->
     <div id="screen3" class="container">
-        <h3 id="game-title" style="margin-bottom: 5px; font-size: 1.2rem;">¡Nuestra siguiente cita será..! 🎰</h3>
-        <p id="game-subtitle" style="font-size: 0.9rem; color: #aaa;">¡Saca 3 iguales para seleccionar la cita!!</p>
+        <h3 id="game-title" style="margin-bottom: 5px; font-size: 1.2rem;">¡Prueba tu suerte por una cita! 🎰</h3>
+        <p id="game-subtitle" style="font-size: 0.9rem; color: #aaa;">¡Saca 3 iguales para ganar el premio!</p>
         
         <div class="slots-container">
             <div class="slot-window">
@@ -340,49 +284,30 @@
         
         <button id="spin-btn" onclick="spinSlots()">Probar Suerte ✨</button>
 
+        <!-- AREA DE RASPADITO -->
         <div id="scratch-container">
-            <h4 style="margin-bottom: 5px; color: #ff9068; font-size: 1.05rem;">🎉 ¡JACKPOT! ¡Ganaste la cita ideal! Raspa abajo para ver más detalles!</h4>
+            <h4 style="margin-bottom: 5px; color: #ff9068; font-size: 1.05rem;">🎉 ¡JACKPOT! ¡Ganaste la cita ideal! y tienes un premio extra... ¡Raspa abajo!</h4>
             <div class="scratch-card">
                 Desayuno en Jalpa + ¡Cupón para quererte siempre! 💖
                 <canvas id="scratch-canvas" width="260" height="90"></canvas>
             </div>
-            <p id="scratch-instruction">Usa tu dedo para raspar la tarjeta</p>
-            
-            <button id="love-btn" style="width: 90%; max-width: 280px;" onclick="nextScreen(4)">¿Quieres saber cuánto te quiero? 🤔❤️</button>
+            <p id="scratch-instruction">Usa tu dedo para raspar la tarjeta ✨</p>
         </div>
-    </div>
-
-    <div id="screen4" class="container">
-        <h2 class="screen-title">Mi amor por ti...</h2>
-        <p style="font-size: 0.95rem; color: #ccc;">No se puede medir, ¡pero crece cada milisegundo!</p>
-        
-        <div id="love-counter" class="love-counter-box">999,999</div>
-        
-        <p style="font-size: 1rem; font-weight: bold; margin-top: 10px;">Presiona el corazón para ver una razón:</p>
-        <button class="heart-btn" onclick="generateReason()">❤️</button>
-        
-        <div id="reason-display" class="reason-box">Presiona el corazón para descubrirlo... ✨</div>
     </div>
 
     <script>
         // --- ROUTING ---
-        let counterInterval; 
-        
         function nextScreen(screenNum) {
             document.querySelectorAll('.container').forEach(el => el.classList.remove('active'));
             document.getElementById(`screen${screenNum}`).classList.add('active');
-            
             if (screenNum === 3) {
                 initSlots();
                 initScratchCard();
             }
-            if (screenNum === 4) {
-                startLoveCounter();
-            }
         }
 
         // --- TYPING EFFECT ---
-        const message = "Feliz primer mes, mi niña hermosa! No me creo que ya haya pasado un mes entero desde que empezamos. Contigo todo se siente sano, libre y muy bonito. Me encanta tu risa y el montón de paz que me da tenerte en mi vida. Gracias por este primer mes de muchos que nos esperan.";
+        const message = "¡Feliz primer mes, Natalia, mi amor! Qué increíble ver lo rápido que se nos pasó este mes. Desde el primer día supe que contigo todo sería diferente, y cada segundo que compartimos me lo confirma. Me encanta cómo me haces reír, tu forma tan linda de ser conmigo y lo hermoso que se siente tenerte en mi vida. Te amo con todo mi corazón, mi niña hermosa.";
         let index = 0;
         const speed = 40; 
 
@@ -397,44 +322,101 @@
         }
         window.onload = typeLetter;
 
-        // --- ROMANTIC SLOT MACHINE LOGIC ---
-        const pool = ['💖', '🍿', '🥞', '🌹', '✨', '🎬', '🍦', '🥞']; 
-        const reelLength = 15; 
+        // --- ROMANTIC SLOT MACHINE LOGIC WITH ATTEMPTS ---
+        const pool = ['💖', '🍿', '🌹', '✨', '🎬', '🍦', '🎬', '🍿', '🌹']; 
+        const reelLength = 20; 
+        let currentAttempt = 1;
 
         function initSlots() {
-            buildReel('reel1');
-            buildReel('reel2');
-            buildReel('reel3');
+            resetReelsToStart();
         }
 
-        function buildReel(reelId) {
+        function resetReelsToStart() {
+            setupReelElements('reel1', '🍿', '💖', '🍿'); 
+            setupReelElements('reel2', '✨', '🎬', '🌹'); 
+            setupReelElements('reel3', '🎬', '🌹', '✨'); 
+        }
+
+        function setupReelElements(reelId, firstIcon, midIcon, lastIcon) {
             const reel = document.getElementById(reelId);
-            let html = '';
-            for (let i = 0; i < reelLength - 1; i++) {
+            reel.style.transition = 'none';
+            reel.style.top = '0px';
+            
+            let html = `<div class="slot-icon">${firstIcon}</div>`;
+            for (let i = 0; i < reelLength - 2; i++) {
                 const randomIcon = pool[Math.floor(Math.random() * pool.length)];
                 html += `<div class="slot-icon">${randomIcon}</div>`;
             }
-            html += `<div class="slot-icon">🥞</div>`;
+            html += `<div class="slot-icon">${midIcon}</div>`;
+            html += `<div class="slot-icon">${lastIcon}</div>`;
             reel.innerHTML = html;
         }
 
-        let hasPlayed = false;
         function spinSlots() {
-            if (hasPlayed) return;
-            hasPlayed = true;
-            document.getElementById('spin-btn').disabled = true;
+            const spinBtn = document.getElementById('spin-btn');
+            spinBtn.disabled = true;
 
-            const targetTop = -((reelLength - 1) * 80);
+            // Determine final position based on attempt
+            let targetOffsetIndex = reelLength - 2; // Default to winning icon position (midIcon)
+            if (currentAttempt === 1 || currentAttempt === 2) {
+                targetOffsetIndex = reelLength - 1; // Forces a non-matching layout (lastIcon)
+            }
 
-            setTimeout(() => { document.getElementById('reel1').style.top = `${targetTop}px`; }, 0);
-            setTimeout(() => { document.getElementById('reel2').style.top = `${targetTop}px`; }, 250);
-            setTimeout(() => { document.getElementById('reel3').style.top = `${targetTop}px`; }, 500);
+            const targetTop = -(targetOffsetIndex * 80);
 
+            // Trigger the spin animation
+            document.querySelectorAll('.slot-reel').forEach((reel, idx) => {
+                reel.style.transition = 'top 3s cubic-bezier(0.1, 0.8, 0.1, 1)';
+                setTimeout(() => {
+                    reel.style.top = `${targetTop}px`;
+                }, idx * 200);
+            });
+
+            // Handle spin outcomes
             setTimeout(() => {
-                document.getElementById('game-title').innerText = "¡CITA GANADA! 🥞🔥";
-                document.getElementById('game-subtitle').innerText = "¡Tres panqueques seguidos!";
-                document.getElementById('scratch-container').style.display = 'block';
-            }, 3500);
+                if (currentAttempt === 1) {
+                    document.getElementById('game-title').innerText = "¡Casi! Intenta de nuevo 🥺";
+                    spinBtn.innerText = "Girar otra vez 🔄";
+                    spinBtn.disabled = false;
+                    currentAttempt++;
+                } else if (currentAttempt === 2) {
+                    document.getElementById('game-title').innerText = "¡Último intento, tú puedes! 🎰";
+                    spinBtn.innerText = "Girar de la suerte 🍀";
+                    spinBtn.disabled = false;
+                    currentAttempt++;
+                } else {
+                    // Winning Attempt
+                    document.getElementById('game-title').innerText = "¡CITA GANADA! 🥞🔥";
+                    document.getElementById('game-subtitle').innerText = "¡Tres panqueques seguidos!";
+                    document.getElementById('scratch-container').style.display = 'block';
+                    spinBtn.style.display = 'none';
+                    triggerHeartExplosion();
+                }
+            }, 3600);
+
+            // Reset positioning secretly behind the scenes before the final jackpot attempt
+            if (currentAttempt === 2) {
+                setTimeout(() => {
+                    setupReelElements('reel1', '🍿', '🥞', '🎬');
+                    setupReelElements('reel2', '✨', '🥞', '🌹');
+                    setupReelElements('reel3', '🎬', '🥞', '✨');
+                }, 3500);
+            }
+        }
+
+        function triggerHeartExplosion() {
+            for (let i = 0; i < 25; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart-pop';
+                    heart.innerText = ['💖', '❤️', '💕', '🥰'][Math.floor(Math.random() * 4)];
+                    heart.style.left = Math.random() * 80 + 10 + '%';
+                    heart.style.top = Math.random() * 50 + 30 + '%';
+                    heart.style.setProperty('--x-move', (Math.random() * 100 - 50) + 'px');
+                    document.body.appendChild(heart);
+                    setTimeout(() => heart.remove(), 2000);
+                }, i * 80);
+            }
         }
 
         // --- MOBILE-SAFE SCRATCH CARD MECHANICAL CODE ---
@@ -477,34 +459,6 @@
             canvas.addEventListener('touchmove', (e) => {
                 scratch(e);
             });
-        }
-
-        // --- SCREEN 4 ENGINE: INFINITE TICKER & REASONS ---
-        let loveScore = 1423984; 
-        
-        function startLoveCounter() {
-            const counterElement = document.getElementById('love-counter');
-            counterInterval = setInterval(() => {
-                loveScore += Math.floor(Math.random() * 7) + 3; 
-                counterElement.innerText = loveScore.toLocaleString();
-            }, 50);
-        }
-
-        const reasons = [
-            "Por tu risa hermosa que me alegra cualquier día.",
-            "Por la paz y tranquilidad que me das. 🕊️",
-            "Por cómo me haces sentir el novio más afortunado del mundo. 🍀",
-            "Porque contigo todo se siente sano, libre y muy bonito.",
-            "Por tus abrazos fuertes que me hacen sentir seguro. 🤗",
-            "Por la manera tan linda en la que me miras.",
-            "Porque no importa lo que pase, contigo siempre es un buen momento. ⏳",
-            "Simplemente por ser tú: mi persona ideal y mi niña hermosa. 👑"
-        ];
-
-        function generateReason() {
-            const display = document.getElementById('reason-display');
-            const randomReason = reasons[Math.floor(Math.random() * reasons.length)];
-            display.innerText = randomReason;
         }
     </script>
 </body>
